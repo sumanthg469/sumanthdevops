@@ -1,0 +1,1409 @@
+77th videos
+===========
+
+Ansible-----ssh----host1(groupA)
+		   host2(groupb)
+		   host3(groupc)
+-playbook
+-inventory
+===========================
+Ansible we are using configuration management tool 
+terrform we are using Iac
+puppet and chef ansible all are using configuration management tool
+
+====================
+i want to update a patch in server's
+i want to update a software in server's
+i want to update or install patch and software in 100 miachines
+tomcat running in multiple machines i want to restart a tomact service in 20 machines we are using ansible
+in configuration file i want to change port number in 20 machines we use ansible.
+i want to delete files in 50 machines olerd than 100 dats files.
+i want to archive files more than 500 mb in 50 machines.
+
+we have huge infrasture we can go to evry machine install softwares it is time taking problem
+============================================================
+we have 
+push model: ansible push model so ansible is famous
+ansible we can call it as agent-less
+ansible tool we can install on one machine that machine we can call it as master or contorller machine
+controller: whare ansible install that machine we can call it as controller machine
+i1,i2,i3---i100---this 100 machines no need to install any software so we can call it as agent less
+
+masteror controller(ansible)-------I1000(worker nodes or managed nodes)----agentless software
+=====================================================
+idemotante: managed node in desire state ansible doesn't do any changes.
+ 
+i have 2 machines
+i1
+i2
+i want to install apache2 in i1 and i2 machines
+
+but hear i1(Apache2)-present
+         i2(apche2())-in present-N/A
+	
+ansible is trying to install apache2 in i1 and i2
+but here i1 allredy install apache2 so ansible does't do any changes in i1 machine
+that is process is called idempotence.
+
+i1---is desire state
+i2 in---in desire state
+
+mangeed node in desire statge ansible does't do any changes that is called idempotence
+
+ex2: i want to copy f1 into /home/ubuntu in 100 machines
+i1---/home/ubuntu/f1-desire stage
+i2---N/A
+.
+.
+i100-N/A
+
+i1 having allredy f1 file is there so ansible doen't copy ti i1 machine
+
+that is in desire statge ansible doenot do any changes
+
+ansible
+1) push model
+2) idompotence
+3) agent-less tool
+
+
+==============================
+pull model---chef and puppet are both are pull model
+
+i need to install in worker nodes agent software and
+chef(master)-----centralrepo(keep it code what you want to excute in maged nodes)-------i1,i2,----i100.
+so we can call it as pull model
+
+chef agent pull the code from chef then agent push the code excute to multiple servers
+any proble on installig we dont know 
+in future we have 20 machine we need to install on anible agent in all 20 machines
+
+chef (master)----i1,i2,i3    i1 i2 i3 all are pull from chef master and excute their required software
+ansible pushed software  to the i1 i2 i3 machies
+tha is main diff between push model and pull models
+
+==================================================
+how ansible knows what machines are managed nodes s 
+
+we need to give machine ip's to master using inventory files.
+inventy file's contains ip adress
+on that ip adress ansible runs the scripts.
+
+i excuted cmd's on master that action push on workernodes 
+
+how ansible commnicate to worker nodes 
+
+if linux machines are worker nodes ansible use ssh-connection
+we need to estabilish connction between masternode and worker-nodes tha is our responsiblity.
+master nodes need to be linux machine's.
+master and controller node's both are linux machine's we are using ssh-connection s we need to establish the connections 
+================================================================
+=====================================
+By default in AWS OS images are designed for password less
+(.pem/.ppk Key based authentication) authentication
+By default in AWS OS images are designed for password less(.pem/.ppk Key based authentication) authentication
+1) we are achivie passwdrd less autication
+vi /etc/ssh/sshd_config
+create user that user give sudo permisions
+passwdauthication=yes
+permitrootlogin=yes
+service sshd restart
+
+using of ssh contoller and manged nodes commnicate.
+ssh-keygen
+
+visudo (vi /etc/sudoers)
+      demo_user  ALL=(ALL)    NOPASSWD: ALL ======>To give root privileges to ansible user
+
+ssh-copy-id demo_user@<private Ip address of remote machine/ DNS>
+        ssh-copy-id demo-user@172.31.19.7
+ssh <private Ip address of remote machine/ DNS>  
+ssh 172.31.19.7
+cd /etc/ansible/
+sudo mv hosts hosts_bkup  
+sudo cp hosts hosts_bkup  
+.  sudo vi hosts
+
+---hadoop---commands----
+after setup
+ansible group1 -b -m yum -a "name=httpd state=latest"
+ansible group1 -b -m service -a "name=httpd state=started"
+
+Note:
+1. If you execute same  commands above,
+ it will skip to execute. Because, those are already running.
+ It will skip the execute. This is called as Idempotence. 
+
+2. Ad-hoc commands are the commands, it will executes only one module once. 
+To use more modules to use, we will go for playbooks.
+3.  Ad-hoc commands in Ansible allow you to execute 
+simple tasks at the command line against one or all of your hosts. Examples
+
+adhioc comnad
+playbooks invents
+replace text
+copy index.html to workernodes
+install benfits files to worker nodes
+
+ansible variabls
+inventory variables
+variable precendece variable
+group_vars
+roles
+ansible galaxy
+ansible valute
+===============================================================
+tasks:
+1) launch 2 server's
+2) install ansible in one server make it as name ansible
+3) i2 server add like managed node
+for installing ansible python is req but now not required allredy ther in latest server's
+for installing ansible find below steps
+
+$ sudo apt update
+$ sudo apt install software-properties-common
+$ sudo add-apt-repository --yes --update ppa:ansible/ansible
+$ sudo apt install ansible
+
+ansible want to commnicate with managed node's
+we need to tell to ansible you need to maine those machine's are managed node's
+where we want to mention that managed node's ip's in inventory's files 
+
+default inventory file is located /etc/ansible/hosts 
+
+#inventory      = /etc/ansible/hosts
+#library        = /usr/share/my_modules/
+#module_utils   = /usr/share/my_module_utils/
+#remote_tmp     = ~/.ansible/tmp
+#local_tmp      = ~/.ansible/tmp
+#plugin_filters_cfg = /etc/ansible/plugin_filters.yml
+#forks          = 5
+#poll_interval  = 15
+#sudo_user      = root
+#ask_sudo_pass = True
+
+========================
+3) for server we are adding that i2 private ip in inventory file 
+
+inventory file location /etc/ansible/hosts
+=======================
+all ansible cmd;'s will stat's with ansible 
+how can we identified inventory files having ip's
+
+cmd: ansible all --list-hosts
+
+when ever we want to commnicate with machines ansible only commnicate with what is inventoey files that machines only it will comnicate
+but how it will work with managed node's we need to establish the ssh connction b/w master andcontroller 
+ansible want to commnicate with manged nodes want ssh connection.
+==========================
+for managed and worker nodes are commnication b/w them
+source machine want's private-key-.pem file  and destination machine want's to publikey--.ppk 
+
+what is default name of private key id_rsa 
+what is default name of pub key id_rsa.pub
+
+4) create ssh keys pub and private key's 
+pub key(kappa) send to destination machie and private key(key) wnat to keep here source machine only 
+5) establih the connection b/w master and worker 
+
+10.0.0.261------controller---ubunt user
+10.0.0.90-------------ubuntu user---w1
+10.0.0.80----ubuntu user---w2
+10.0.0.70-----ubuntu user---w3
+
+conn establish b/w con node ubuntu user to worker node ubuntu user
+
+what is establish connection between 2 server's 
+ans: nothing but from one machine to excute in cmd's in another machine that means 2 machines are connection established .
+we can connect with another machine using private key that 2 machine are in establish connection 
+======================
+
+ansible all --list-hosts
+
+1) for ansible master need to connect to conrtoller we have to mention controller ip's in that inventrey files
+inventory file loc show above
+
+2) for we cant to establish the conn between master and contoller
+
+3) then for master conn for controller ansible want private key that private key name id_rsa that file present in user home dir/.ssh/id_rsa
+
+ansible all -m ping----pong means it is connected sucessful
+we are having multiple modules in asnible
+==================
+terraform using infrasture management
+ansible used for configuration mangement tool & it is work on the infrsture
+for i want to delete particular file in all machines then i want to install softwares
+terraform working for creating infrasture ansible working on that infrasture
+
+===============================
+1) we can done with copy module
+task:
+1) i want to copy file from ansible master machine to manged nodes
+
+we can do grouping options in ansible other wise we can do all
+db
+[i1,i2]
+web
+[13,14]
+
+ansible db -m ping
+ansible web -m ping
+ansible all(which group server u want to perform) -m(which module you want befor that you can give -m option) ping(module name)-----it is for all groups
+================================
+ansible all -m copy -a "src=/etc/passwd dest=/home/ubuntu"
+yellow colour came then it is copied sucessful
+
+again run same comman copy module it will not do any changes because manged nodes are desired stage 
+it wil give green
+
+that is called idempotence
+============
+in ansible some command's are overide idempotence feture
+
+ansible copying file from one machine to another machile whi will owner of that file ubuntu only
+ansible is commnicate with all machines using ubuntu user 
+
+in contoller i am in ubuntu user using ubuntu user we are not mention any user of managed node's
+ansible is thing manged nodes' also having ubuntu user it will copy using ubuntu user only that file
+owner is ubuntu only 
+===================================
+in ansible some command's are break's the idepotance feauteru .
+99% do use that type os command's in ansible 
+ansible for designed idpotance feauteru 
+but some modules are doesn't support idepotance feautere 
+==============================
+q) i am copying file one machine to antoter machiner using of which user crediant's .
+ansible controller copying one machine to another machine using of ubuntu but not ubuntu user not in another managed node
+here ansible contoller node using with ubuntu user copying to file controller to managerd node ansible thinking managed node's also having same user that file
+owner is ubuntu only .
+==================================================
+ansible want's  to connect with managed node's  
+default inventory file is located /etc/ansible/hosts
+in that file maintaine managed node's ip's and grup of ip's 
+for all managed nodes connting purpose  that folrd placed in the user home dir /.ssh/private.key in the controller
+========================================================
+ansible--------connect with ppk file and using ubuntu user login with i1 instance----------------i1(ubuntu)--publkey in ~/.ssh/authozed_keys
+~/.ssh/.ppk file--connect with ppk file and using shashi user login with i2 machine---------------------i2(shashi)----publkey in ~/.ssh/authozed_keys
+
+
+when ever ansible copy file contoller to managed nodes. using of managed user's copyed  file owner managed node user only 
+in linux each have a owner 
+==========================
+ansible is the copied file to managed node's that file who is owner that file which user using login to managed node user that user is the owner that file 
+
+=======================================
+ansible  group name(all) -m copy -a "src=/home/a dest=/home/"
+
+ ansible is copiy files into controller using of ubuntu ansible think's thet maaged node's also having same user if dont have that user in managed node's it will 
+throws error
+
+ ansible is copiy files into controller i am not mention any thing   ansible think's thet maaged node's also having same user ubuntu 
+ if dont have that user in managed node's it will throws error
+============================
+tasks:
+
+10.0.0.243---ubuntu user using login with this machine
+10.0.0.161----sheshi user using login with this machine
+
+what we will do.
+ steps1) we want to create 1st sheshi user in managed node's4
+sudo useradd -m -s /bin/bash sheshi
+step2 : authorized key's file copy into shahsi user home directory
+sudo cp -r ~ubuntu/	.ssh ~sheshi/
+sudo chown -R sheshi:shesahi ~shehsi/.ssh
+
+ansible all -m ping 
+
+ansible ping to managed node's using of ubuntu only 
+but i want to use connect with 161 server using shahshi user
+
+so go to inventry file mention 161 ip along with sheshi user using of synatx
+
+ansible/hosts
+10.0.0.243
+10.0.0.161 ansible_user=sheshi
+
+ansible all -m ping
+
+this cmd pin:pong
+243--ubuntu
+161shehsi user
+
+now i want to copy file 
+ubunru:ansible all -m copy -a "src=/ dest=/"
+243---file owner ubuntu
+161---file owner shehsi
+
+in inventory file after ip you need to mention 
+ 
+
+root: ansible all -m ping
+error: why i am geting this error
+in root user home dir not having private key so it's giving error
+
+ansible cmd's excuting with which user
+
+ssh keys all are present in the ubuntu user home directory
+not in root user home directory 
+
+where look for private keys
+userhomedir/.ssh/id_rsa
+
+sudo ansible all -m copy -a "src=/etc/passwd dest=/abc"
+it will aslo give error why means 
+destination not writable
+root user excuting this command not on that machine
+ubuntu user not having wirte permisions root user
+==================================
+copy commend opposite to fetch command
+fetch: this command using this fetch file from manged node's to controller
+all : means all invenroy thing's
+
+sudo ansible all -m copy -a "src=/etc/passwd" dest=."
+i am having 2 machine's managed node's but i copied all managed node's passwd file to contoller 
+which passwd file present in the contoller
+
+passwd file from worker node1
+passwd file from worker node2
+passwd file from worker node3
+
+each inventory it will create a folder
+10.0.0.243           10.0.0.161
+   /etc/passwd           /etc/passwd
+
+
+ansible all -m copy -a "src=/etc/shadow"  dest=."
+
+it will give eoor because ubuntu user not having read  permisons on shadow file 
+
+sudo ansible all -m copy -a "src=/etc/passwd" dest=."
+
+error because sudo privilizes only working in itself machine
+
+
+ansible all -m copy -a "src=/etc/passwd" dest=." -b
+
+sucess
+because ansible command excute command with managed node's that user's with root privilizes 
+if managed node's having user's have root privilizers it working file
+other wise it throws error
+233--sucess
+161--sheshi user not having root privilzer's
+=================================
+i want to display list of file in ubuntu directory
+some commnd's we should not use requrally 
+in remore machine sheshi.sh folder is there i want to excute all worker node's
+ansible giving shell module 
+using of shell module excute .sh file in remote machine's 
+but shell module not follow the idmoptence 
+
+ansible all -m shell -a "ls -l"
+ansible all -m shell a "ls -l /tmp"
+ansible all -m shell -a "ls -l /tmp > test"===it excute in all worker nodes
+
+shell module break the idepotence 
+
+command module excute the command's
+ansible all -m command -a "echo sheshivarhdan > test1"
+command module doest follw idempotancd
+
+
+
+======================
+command module and shell module bioth are excute command's in remote machine 
+but what is diff between the command vs shell
+
+
+ansible all -m command -a "echo sheshivardhan > test1"
+
+command module doesn't follow idmpotance feauter
+
+shell and command module both are excute command in worker node's
+
+ansible all -m command -a "ls -l  /etc |grep ^d |  wc -l"
+
+command module doesn't support shell feautere
+shell feauter nothing but: redirection , pipeing,command substution
+other command's work work properly but shell feautere doen't work it
+
+in case of shell module it will work with shell feature
+|,$HOME,>< etc...
+=======================================================
+
+ q): i want to create file in the worker node's /home/ubuntu/abc.txt file
+
+ansible all -m file -a "path=/home/ubuntu/abc.txt state=touch"
+243---server sucessful
+161---server failure why because sheshi user doen't have permision to create file ubuntu directory
+
+again work above command sucessful create abc.txt file with new time stamp
+====================
+Q) i want to see the particular file is avalable or not
+
+ansible all -m file -a "path=/home/ubuntu/abc.txt state=file"
+
+ansible all -m file -a "path=/home/ubuntu state=file"
+error tht is not a file that is dir
+================
+q) i want to check the create a dir is avalable or not 
+ansible all -m file -a "path=/home/ubuntu/abc.txt state=directory"
+
+=======================
+q) i want to delete a directory
+ansible all -m file -a "path=/home/ubuntu/abc.txt state=absent"
+1st time excute dir deleted 2nd excute dir not found
+=================================================
+i want to install apache2 software
+ans) 
+ansible all -m apt -a "name=apache2 state=present"
+
+this command error  why because when we can install softwares using of sudo privilizers's only
+sudo ansible -m apt -a "name=apache2 state=present"
+this one also give error because sud cmd excute within the server
+
+sudo ansible -m apt -a "name=apache2 state=present" -b 
+1st you need to update the server
+
+ansible -m apt -a "name=apache2 state=present update_cache=yes" -b
+====================
+i want to delete softwares 
+ 
+ansible all -m apt -a "name=apache2 state=absent"
+====================================================
+[webapp]
+161
+127
+[db]
+243
+127
+
+here 127 in web app & db group
+ansible 10.0.0.127 -m apt -a "name=tomcat9 state=present" -b
+only particular server you want to install software write like that
+================================
+what is git clone do
+clone the repogotory 
+
+git clone
+git fetch
+git pull
+
+what is diff b/w pull and fetch
+======================
+i want to see all privte ip'sin vpc
+aws ec2 decribe-instances --filters vpc-id | grep
+===============================================================
+78th-video
+
+we are having  uri module  command 
+it will ping that site if that site is there it will give 200 
+other wise it will give the 404 error page not found error.
+
+ansible 10.0.0.15 -m uri -a "url=http://google.com"
+200: sucess goog.com it is there 
+ansible 10.0.0.15 -m uri -a "url=http://smaranit.com/sheshi"
+
+uri just like wget it will ping page is there other wise it will give 404 error.
+
+modules:
+uri
+apt---to install softwares in ubuntu 
+yum---to install softwares linux
+===============================
+to install softwares
+
+ansible all -m apt -a "name=apache2 state=present"
+
+ansible all -m yum -a "name=apache2 state=present"
+
+firat update then install
+
+ansible all -m yum -a "name=apache2 state=present update_cache=yes"
+
+root user only install softwares so use -b manes become i not mention it will treat as a root
+
+ansible all -m yum -a "name=apache2 state=present update_cache=yes" -b
+
+ansible all -m yum -a "name=apache2 state=absent" -b
+
+ansible all -m yum -a "name=apache2 state=latest" -b 
+
+latest means latest package will be excute 
+=======================================================
+i want to start the service using of service module 
+
+ansible all -m service -a "name=apache2 state=started" -b 
+
+ansible all -m service -a "name=apache2 state=stopped" -b
+
+yellow means changes
+green means desirable state it will not do any thing 
+========================================================
+i want to copy shell script from controller to manged node after that i want to excute in that managed node's
+
+script nothing but the any code
+
+1st step copy the file into all managed nodes 
+2 nd step excute the that script 
+
+instead of this comand's excute manuvally we will write some play book's
+
+in k8s we call as manifest files 
+here we can call as play book's
+we wrote all comand's in this play book excute that play book's
+play book's are written in the yaml .
+=================================================
+task1: copy file from controller to manged node's
+
+---
+hosts: all  -------it is key value format
+tasks:      --------in task section list format we can write modules .we will write no of modules
+- copy:
+   src: /etc/passwd
+   dest: /home/ubuntu
+
+vim 1.sh
+
+hosts: all  
+tasks:  
+- copy:
+   src: /etc/passwd
+   dest: /home/ubuntu
+
+
+we are having multiple hosts 
+play book nothing but the cobmination of plays
+
+hosts is the list 
+
+---
+- hosts: all
+  tasks:
+  - copy:
+     src: /etc/passwd
+     dest: /home/ubuntu
+
+
+ansible-playbook 1.yml --syntax-check
+
+cool
+
+ansible-playbook 1.yml
+it done changes 
+ok=2 means conneting it will changes done
+
+again run
+
+ansible-playbook 1.yml
+it is deired stage it doenot do any changs
+
+=====================================
+task2 :
+
+i want to install a service and start the service
+
+
+---
+- name: play boo to install apache2 and start the service
+  hosts:
+  tasks:
+  - name: install apache2
+    apt:
+      name: apache2
+      state: present
+      update_cache: yes
+  - name: start the service
+    service"
+      name: apache2
+      state: started
+
+vim 2.yaml
+ansible-playbook 2.yaml  --syntac-check
+syntax goo 
+
+ansible-playbook 2.yaml
+
+no permisions
+
+---
+- name: play boo to install apache2 and start the service
+  hosts:
+  become: yes 
+  tasks:
+  - name: install apache2
+    apt:
+      name: apache2
+      state: present
+      update_cache: yes
+  - name: start the service
+    service"
+      name: apache2
+      state: started
+
+we excute the commands using with sudo privilizes 
+we wre giving name for module 
+
+=================================================
+task3: i want to copy file to all hosts ha file excute 
+
+myscript.sh
+echo i am sumanth
+echo this is ip $(hostname)
+cp /etc/passwd /tmp
+echo cmd status s?
+
+this file i want to copying into managed node's that file i want to excute
+
+---
+ - name: copying the file and excute that file
+   hosts: all
+   tasks: 
+   - name: copying file into all hosts
+     apt: 
+       src: /home/ubuntu/a1
+       dest: /home/ubuntu
+
+    - name: excute the file in all hosts
+      shell: sh /home/ubuntu/myscript.sh
+
+       
+=================================================
+task4: 
+1) change passwdauthication yes in /etc/ssh/shd.config file 
+2) restart the sshd service 
+
+- hosts: 127.0.0.1
+  tasks:
+  - name: Ansible replace string example
+    replace:
+      path: /etc/ssh/sshd_config
+      regexp: 'passwdauthication no'
+      replace: "passwdauthication yes"
+
+- hosts: 127.0.0.1 
+  become: yes
+  tasks:
+  - name: Ansible replace string example
+    replace:
+      path: /etc/ansible/sample.txt
+      regexp: 'Unix'
+      replace: "Linux"
+
+ansible-playbook 4.yaml
+
+- hosts: 127.0.0.1
+  become: yes
+  tasks:
+  - linefile:
+      dest: /etc/ssh/sshd_config
+      regexp: '^passwdwordauthication no'
+      line: 'passwordauthication yes'
+      state: present
+   - service:
+       name: sshd  or ssh
+       state: restarted
+ 
+
+ansible-playbook 4.yml--checking 
+
+
+it is everytime restating the service if 2nd time also excuted 
+service module excuteing 2nd time and restarting the servuce again
+when ever changes done only i want to restart the service 
+==========================================`
+when ever my configuration file is change's then only my service is restarted
+now notify is comes into picture 
+
+when notify command will excute that linefile module do any changes then only it will excute
+other wise does't excute. 
+when notify module excute then only that related handeler will excute.
+
+---
+- name: replace and start the service
+  hosts: all
+  tasks: 
+  - inline:
+      dest: /etc/ssh/sshd_config
+      regexp: '^passwordauthication no'
+      line: 'passwdauthication yes'
+      state: present
+      notify: restart the ssh srvice
+  handelers: 
+  - name: restart the ssh srvice 
+    service:
+      name: ssh
+      state: restarted
+
+
+handeles section will excute all taskes is complted only. when that related notify is excuted then only it will excuted 
+
+ansible-playbook 4.yaml 
+notify not excute why because that not do any changes so handler section not excuted 
+
+=NOTIFY EXCUTE that related module some change's in system that module not change's it will not excute=================================================
+handles we can write task section in handelr section we can write task
+
+handelrs excute 1 time all task section will excute then only last handelr's will excute
+in task section we are having 10 modules that 10 modules excute then only handerls will excute
+that related taskn ot any change's it will not excute.
+pysically it will do some chane's in system.
+yellow colour means done chang's green doe's done any chang's
+in task section module excute done the only it will excute.
+
+handelrs will excute last only .
+in task section we are having 20 task's 20 task will excute then only it will excute.last last
+
+debug module we are for printing the message.
+
+
+- name: replace and start the service
+  hosts: all
+  tasks: 
+  - inline:
+      dest: /etc/ssh/sshd_config
+      regexp: '^passwordauthication no' ---------1 st it is excuted
+      line: 'passwdauthication yes'
+      state: present
+      notify: restart the ssh srvice
+  - copy:
+      src: /etc/passwd     2nd it is excuted
+      dest: /tmp
+  handelers: 
+  - name: restart the ssh srvice 
+    service:                                             3rd it is excuted 
+      name: ssh
+      state: restarted
+===============================
+
+1st all	 modules excuted in taskk section then only it will excuted handelr excutited 
+===================================
+ex: 1st i want to do changes in sshd_config file passwdauth no to yes then i want to restart ssh service 
+when changes done then only i want to do restart the servcer on the time i will use notify command 
+and hander section 
+=================================
+register module: i want to store particulr module or task output into varibale 
+================================
+task5: i want to store module output 
+
+---
+- name: replace and start the service
+  hosts: all
+  tasks: 
+  - inline:
+      dest: /etc/ssh/sshd_config
+      regexp: '^passwordauthication no' ---------1 st it is excuted
+      line: 'passwdauthication yes'
+      state: present
+      notify: restart the ssh srvice
+   - copy:
+      src: myscript     2nd it is excuted
+      dest: /tmp/myscript
+   - shell: /tmp/myscript
+     register: v_scr_output
+   - debug:
+     msg: v_scr_output
+
+  handelers: 
+  - name: restart the ssh srvice 
+    service:                                             3rd it is excuted 
+      name: ssh
+      state: restarted
+===========================================
+
+
+inventory file location /etc/ansible/hosts
+
+
+1) we can done with copy module
+task:
+1) i want to copy file from ansible master machine to manged nodes
+
+we can do grouping options in ansible other wise we can do all
+db
+[i1,i2]
+web
+[13,14]
+
+ansible db -m ping
+ansible web -m ping
+ansible all(which group server u want to perform) -m(which module you want befor that you can give -m option) ping(module name)-----it is for all groups
+
+
+===============
+Check the Opatch lsinventory  of ORACLE_HOME
+
+./opatch lsinventory
+
+Deleting a file in remote server-ansible file module
+So at path parameter mention path of your file which you want to delete. at path: mention the path of the file in remote server. at state: mention absent to delete the file. so at state parameter, 
+we will use touch to create the file, absent to delete the e file.
+=============================================================================================================
+interview asking for handels example
+i want to passwdautication no to yes change then i want to restart sshd service
+then i am using notify and handelers .
+whaen notify module excute then only handers will excute.
+================================================
+i want to store particular task or module output into variable we are using the register module.
+
+1.yml
+---
+- hosts: all
+  tasks: 
+  - linefile
+      dest: /etc/ssh/sshd_config
+      regexp: '^passwdordAuthication no'
+      line: 'passwordAuthication yes'
+      state: present
+     notify: restart the sshd
+  - copy:
+      src: myscript.sh
+      dest: /home/ubuntu
+   - shell: sh myscript
+     resgister: v_scr_output
+    debug: 
+      var: v_scr_output
+
+  handelrs: 
+  - name: restart service ssh
+    service:
+      name: ssh   
+      state: restarted
+
+
+
+
+ansible-playbook 1.yml -b
+
+=========================
+variable cretion 
+using vars module
+we have to create a module below like that 
+vars:
+  name: sumanth
+  empid: 1022s
+  des: devops engineer
+  company: vodafone
+
+
+create user's we are using user module
+
+---
+name: creating user
+hosts: all
+become: true
+vars:
+  user_name: sheshi
+tasks:
+- name: create a user
+  user: 
+    name: "{{ user_name }}"
+    groups:
+      - wheel
+    state: present
+
+
+=======================================================
+---
+name: install multiple software's
+hosts: all
+become: true
+vars:
+  packag_name:------list variable
+  - awscli
+  -apache2
+  - nfs-comman
+  - tomact
+tasks:
+- name: create a user
+  apt: 
+    name: "{{ item }}"
+    state: present
+  with_items
+  - "{{ package_name }}"
+    
+===================================
+how you will with_items
+---
+name: install multiple software's
+hosts: all
+become: true
+vars:
+  packag_name:------list variable
+  - awscli
+  -apache2
+  - nfs-comman
+  - tomact
+tasks:
+- name: create a user
+  apt: 
+    name: "{{ item }}"
+    state: absent
+  loop:
+  - "{{ package_name }}"
+
+=================
+loop,wit_item using same work onw by one
+
+opatch rollback command
+ user_details:
+      - {name: 'testuser1', uid: 1002, groups: ['admin', 'logs']}
+      - {name: 'testuser2', uid: 1003, groups: ['logs']}
+===================
+stat - retrieve file or file system status--file information give
+ping
+copy
+file---creat a dir , file
+stat---it will give file info
+setup----it will give ststem info
+apt/yum
+serive
+uri--patruclar url reachble or not
+get_url
+user
+debug
+lineinfile--replace word
+shell
+command
+mount
+onemount
+================================
+name
+host
+tasks
+register
+become
+notify
+handerles
+register" story module outpur
+var
+wit_items/loop
+when: task will be excute that module will excute
+===============================
+---
+- name: when testing
+  hosts: all
+  gather_facts: yes
+  become: true
+  vars: 
+    v_define: true
+  tasks: 
+  - copy:
+      src: /etc/passwd
+      dest: /home/ubutnu
+    when: v-define==true        -----------when is true copy module will excute
+=================================================
+---
+- name: when testing
+  hosts: all
+  gather_facts: yes -----it is retrive the system fact's
+  become: true
+  vars: 
+    v_define: false
+  tasks: 
+  - copy:
+      src: /etc/passwd
+      dest: /home/ubutnu
+    when: v-define==true  --------copy module not excuted
+=======================================
+gather_facts: yes --it will fetch system facts
+by default it is yes only
+
+=================================
+i want to ecute if ubuntu apt-get module
+if linux it will excut yum module
+
+---
+- name: install appche/httpd
+  hosts: 10.0.0.1
+  gather_facts: yes
+  become: true
+  tasks: 
+  - setup:
+    register: v_details
+    debug:
+     var: "{{ v_details }}"
+
+ansible-playbook playbookname
+=================================
+
+ansible 10.0.0.1 -m setup | gerp dis
+
+"parameter is called ansible_distubution": "ubuntu"
+
+
+---
+- name: install apache2/httpd
+  hosts: all
+  become: true
+  gateher_facts: true
+  vars:
+  package_name: 
+  - apache2
+  - httpd
+  tasks:
+  - name: create install apache2/httpd
+  apt: 
+    name: "{{ item }}"
+    state: present
+    when: setup: ansible_distubution"== "ubuntu"
+   - name: create install apache2/httpd
+     yum: 
+    name: "{{ item }}"
+    state: present
+    when: setup==ansible_distubution": "Redhat"
+    loop:
+      - "{{ package_name }}"
+
+gather facts must be yes
+
+---
+- name: install httpd/apache2
+  hosts: 10.0.0.15
+  gather_facts: yes
+  become; yes
+  tasks:
+  - apt
+     name: awscli
+     state: present
+    when: "ansbile_distubution=='Ubuntu'"
+
+  - yum
+     name: awscli
+     state: present
+    when: "ansbile_distubution=='Ubuntu'"
+
+    debug:
+    var: v_details
+
+==========================================================
+update_cache=yes – Run the equivalent of apt-get update command on all servers.
+force_apt_get=yes – Do not use the aptitude command, instead use the apt-get command on Debian/Ubuntu boxes.
+cache_valid_time=3600 – Update the apt cache if its older than the cache_valid_time.
+
+---
+- name: update and install apache2
+  hosts: all
+  become: true
+-name: install apache
+ tasks:
+  apt:
+   update_cache:yes---it will update then it will excute apt-update 
+   name: apache2
+   state: present
+   
+opatch rollback -id 120120
+==================
+from outside also we can red's variable
+To roll back a patch that was applied to an Oracle Fusion Middleware Oracle home, use the opatch rollback command. To roll back multiple patches that were previously applied to an 
+Oracle Fusion Middleware Oracle home, use the opatch nrollback command.
+=========================
+what is template module
+hostvars
+groupvars
+block section
+exception handling
+
+
+you want subject yu check ec2 module git module
+====================================
+git clone gitrepo--clone the repo
+git branch
+git branch --all
+it wil shon the repos(branche's)
+==================
+git pull --it merge with curent branch
+git pull git fetch+merge
+git fetch --create a saparate branch
+
+"A "git pull" is what you would do to bring your repository up to date" <- isn't the repository update already done by fetch? don't you mean it brings your local branches up-to-date with the remote branches? To the merge: It merges the remote branches with your local copies 
+of those branches, or what exactly does it merge here? 
+========================================================================
+
+ansible-playbook playbook.yml
+ansible-playbook -i myinv web playbook.yml
+===================================================
+
+ansible -i myinv --list
+ansible-playbook -i myinv 
+===========================
+playbooks
+host_vars---f1(package_name:tomcat9),f2(package_name:apache2),f3(package_name:httpd)
+
+myinvefile
+
+---
+- nmame: testing vars
+  hosts: web
+  become: true
+  tasks:
+  
+ansible-playbook -i /path/to/inventory_file site.yml
+===============================================================
+oracle@control:~/work$ cat upgrade_opatch.yml
+---
+- hosts: database
+  tasks:
+  - name: Check if /etc/oratab exists
+    stat:
+      path: /etc/oratab
+    register: oratab
+  - debug:
+      msg: "/etc/oratab does not exists"
+    when: oratab.stat.exists == false
+  - name: Check if unzip exists (if not we wont be able to unzip the opatch zipfile)
+    shell: "command -v unzip"
+    register: unzip_exists
+  - debug:
+      msg: "unzip cannot be found"
+    when: unzip_exists == false
+  - name: Copy the opatch zipfile to the target oracle home
+    copy:
+      src: p6880880_112000_Linux-x86-64.zip
+      dest: /u01/oracle/11204
+  - name: Upgrade opatch
+    shell: unzip -o /u01/oracle/11204/p6880880_112000_Linux-x86-64.zip -d /u01/oracle/11204
+    register: unzip
+    failed_when: unzip.rc != 0
+  - name: Cleanup the zipfile from the target home
+    file:
+      name: /u01/oracle/11204/p6880880_112000_Linux-x86-64.zip
+      state: absent
+==========================================================================
+/etc/ansible/
+ansible.cgf 
+ host_vars--------10.0.0.1(package_name:tomcat9),10.0.0.2(package_name:apache2),10.0.0.3(package_name:httpd)
+ roles 
+ hosts 
+ group_vars: dbfile(package_vars),web(package_vars)
+playbooks ---plabook level we mention variable
+
+
+
+myinvefile
+
+---
+- nmame: testing vars
+  hosts: web
+  become: true
+  vars:
+    my_package: nfs_common
+  tasks:
+   name: "{{ my_package }}" 
+   state: present
+    
+
+
+
+  
+ansible-playbook -i /path/to/inventory_file site.yml
+we are creating variable in group level host level host will take higest pririty 
+we are ceting variable in ply level group level host level
+
+variable prority levels below
+runtime variable creating   extra-vars
+playbook
+host_vars
+group_vars
+
+and we can define at runtime
+ansible-playbook --extra-vars package_name=ngix 1.yml
+
+=============================================
+what is diff template module cupy
+same but 
+tempate it will coy dynamically it will replace  the value from hostvars
+
+echo software {{ packageanem }} >a.txt
+
+ansible a;; -m copy -a "src abc.txt dest=/home/ubunt"
+ansible all -m template -a "src abc.txt dest=/home.ubuntu"
+we are taken file give variable name then usie copy module & template module 
+when we are using copy same test will copy 
+but template module we are using in the file varible variable taken and copy 
+=============================================
+roles-
+1) how to create a roles
+2) how to call roes
+3) roles sturecture
+
+variable's
+taks
+static file
+template file --dynamically replace the value n place of vars
+handerle's
+
+we can write singla file there is confusion
+each file we can put into diff thing's
+
+
+file--all file's we can put into the file section dir
+---file.yml
+tasks dire
+--taks.yml
+handelr's dir
+--main.yml
+template dir
+--main.yml
+varoibale dir
+--vars.yml
+
+===============
+role directoy loc 
+/etc/ansible/role
+
+what is advantage of role
+
+how to create a role
+
+ansible-galaxy init role1
+
+
+
+
+tree role1
+
+defaults
+
+
+
+template
+f2
+{{ package_name }}
+
+
+
+
+files
+f1 
+{{ packge_name }}
+
+
+
+handerls
+hander section write
+
+
+
+
+meta
+
+
+
+
+
+task
+playbook.yml
+
+---
+- nmame: testing vars
+  hosts: web
+  become: true
+  vars:
+    my_package: nfs_common
+  tasks:
+   name: "{{ my_package }}" 
+   state: present
+    
+
+
+
+
+var
+var.yml
+vars: apache2
+
+
+
+
+how to call role
+we have setup done up side
+
+in the /etc/ansible we create .yml file we excute that file then in that yaml file we can call tyhe 
+role see below
+
+2.yml
+- name: call the role1
+  hosts: web
+  roles: 
+   - role: ./role1
+
+
+ansible-playbook 2`.yml -b
+
+
+
+==================================================
+
+/etc/ansible
+
+hosts  
+playbooks 
+role1(it i having multiple dir)
+2.yml
+====================
+roles-example/
+├── defaults
+│   └── main.yml
+├── files
+├── handlers
+│   └── main.yml
+├── meta
+│   └── main.yml
+├── README.md
+├── tasks
+│   └── main.yml
+├── templates
+├── tests
+│   ├── inventory
+│   └── test.yml
+└── vars
+    └── main.yml
+
+
+ansible all -a sudo lsblk"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
