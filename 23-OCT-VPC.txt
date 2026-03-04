@@ -53,7 +53,9 @@ IT WILL CHECK ROUTE TABLE THAT IP IS NOT IN RANGE OF VPC SO IT WILL SEND TO OUTS
 SO USING ROUTE TABLE SERVER'S SEND REQ TO OUT-SIDE OR OUT-SIDE
 
 
-
+Component	Lives In	Used By
+NAT Gateway	Public subnet	Private subnets
+Internet Gateway	Attached to VPC	Public subnets
 
 
 
@@ -249,6 +251,7 @@ TASKS:
 
 RT------ROUT1-----10.0.0.0/24--LOCAL
         ROUT2--------0.0.0.0/0---IGW
+
 
 
 
