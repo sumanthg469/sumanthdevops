@@ -28,7 +28,7 @@ BUT OUTSIDE PERSONS WANT TO COMNICATE TO PRIVATE SUBNET SERVER IT IS DENY
 USING PEERING CON.
 
 
-
+Private EC2 → NAT Gateway (in public subnet) → Internet Gateway → Internet
 
 ==========================================================================
 VPC: ALL AWS SEVICESS VPC IS THE BASE THING
@@ -249,6 +249,7 @@ TASKS:
 
 RT------ROUT1-----10.0.0.0/24--LOCAL
         ROUT2--------0.0.0.0/0---IGW
+
 
 
 
